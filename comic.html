@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>漫画一则</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scrollbar-gutter: stable;
+      }
+
+      @keyframes slideDown {
+        from {
+          transform: translateY(-100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 80px;
+        background-color: rgba(135, 206, 250, 0.8);
+        backdrop-filter: blur(10px);
+        color: black;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 50px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        z-index: 999;
+
+        animation: slideDown 0.8s ease-out forwards;
+      }
+
+      .logo-area {
+        display: flex;
+        align-items: baseline;
+      }
+      .logo-main {
+        font-size: 32px;
+        font-weight: bold;
+      }
+      .logo-divider {
+        margin: 0 10px;
+        color: #555;
+      }
+      .logo-sub {
+        font-size: 14px;
+        color: #444;
+      }
+
+      .nav-container {
+        position: relative;
+        display: flex;
+        height: 100%;
+      }
+
+      .nav-item {
+        text-decoration: none;
+        color: #333;
+        padding: 0 25px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        font-weight: 500;
+        z-index: 2;
+        transition: color 0.3s;
+      }
+
+      #indicator {
+        position: absolute;
+        bottom: 0;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.4);
+        transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        border-radius: 4px;
+        z-index: 1;
+      }
+
+      .background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -1;
+        background-image: url("backgrounds/background3.png");
+        background-size: 160% auto;
+        background-position: center;
+        background-repeat: no-repeat;
+        filter: blur(2px);
+      }
+
+      footer {
+        text-align: center;
+        padding: 20px;
+        margin-top: 40px;
+        background-color: rgb(135, 206, 250);
+        color: black;
+        font-size: 1em;
+      }
+
+      .comic-container {
+        max-width: 800px;
+        margin: 120px auto 40px;
+        padding: 0 20px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        animation: fadeInUp 1s ease-out;
+      }
+
+      .comic-page {
+        height: 620px;
+        background: white;
+        padding: 10px 10px 5px 10px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: transform 0.5s ease, box-shadow 0.5s ease;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .comic-page:hover {
+        transform: scale(1.05) rotate(1deg);
+        box-shadow: 0 15px 45px rgba(0, 0, 0, 0.15);
+      }
+
+      .comic-page img {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+        display: block;
+      }
+
+      .page-number {
+        margin-top: auto;
+        text-align: center;
+        font-size: 14px;
+        color: #888;
+        padding: 5px;
+        font-weight: bold;
+      }
+
+      .lightbox {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.75);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+      }
+
+      .lightbox.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .lightbox img {
+        max-width: 90vw;
+        max-height: 90vh;
+        border-radius: 12px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        animation: zoomIn 0.3s ease;
+      }
+
+      @keyframes zoomIn {
+        from {
+          transform: scale(0.9);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      .close-btn {
+        position: absolute;
+        top: 40px;
+        right: 150px;
+        width: 44px;
+        height: 44px;
+        cursor: pointer;
+        z-index: 10000;
+      }
+
+      .close-btn span {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 28px;
+        height: 3px;
+        background-color: white;
+        border-radius: 2px;
+        transform-origin: center;
+      }
+
+      .close-btn span:first-child {
+        transform: translate(-50%, -50%) rotate(45deg);
+      }
+
+      .close-btn span:last-child {
+        transform: translate(-50%, -50%) rotate(-45deg);
+      }
+
+      .close-btn:hover {
+        transform: scale(1.1);
+      }
+    </style>
+
+    <link rel="icon" href="icon/mygo.png" />
+  </head>
+  <body>
+    <div class="background"></div>
+    <header>
+      <div class="logo-area">
+        <span class="logo-main">Luoyi</span>
+        <span class="logo-divider">|</span>
+        <span class="logo-sub">web小程序</span>
+      </div>
+      <nav class="nav-container" id="mainNav">
+        <div id="indicator"></div>
+
+        <a href="picture.html" class="nav-item">数字画廊</a>
+        <a href="sound.html" class="nav-item">音乐专辑</a>
+        <a href="comic.html" class="nav-item active">漫画一则</a>
+        <a href="about_me.html" class="nav-item">关于我</a>
+      </nav>
+    </header>
+
+    <main class="comic-container">
+      <div class="comic-page">
+        <img src="comic/comic1.png" alt="漫画第1页" />
+        <div class="page-number">PAGE 01</div>
+      </div>
+
+      <div class="comic-page">
+        <img src="comic/comic2.jpeg" alt="漫画第2页" />
+        <div class="page-number">PAGE 02</div>
+      </div>
+
+      <div class="comic-page">
+        <img src="comic/comic3.png" alt="漫画第3页" />
+        <div class="page-number">PAGE 03</div>
+      </div>
+
+      <div class="comic-page">
+        <img src="comic/comic4.jpeg" alt="漫画第4页" />
+        <div class="page-number">PAGE 04</div>
+      </div>
+    </main>
+    <div class="lightbox" id="lightbox">
+      <div class="close-btn" id="closeBtn">
+        <span></span>
+        <span></span>
+      </div>
+      <img id="lightbox-img" src="" alt="图片" />
+    </div>
+    <footer>Mady by Luoyi.All rights reserved.</footer>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const nav = document.getElementById("mainNav");
+        const indicator = document.getElementById("indicator");
+        const items = document.querySelectorAll(".nav-item");
+        const activeItem = document.querySelector(".nav-item.active");
+        function moveIndicator(element) {
+          if (!element) return;
+          indicator.style.width = `${element.offsetWidth}px`;
+          indicator.style.left = `${element.offsetLeft}px`;
+        }
+        moveIndicator(activeItem);
+        items.forEach((item) => {
+          item.addEventListener("mouseenter", (e) => {
+            moveIndicator(e.target);
+          });
+
+          item.addEventListener("mouseleave", () => {
+            moveIndicator(activeItem);
+          });
+        });
+        window.addEventListener("resize", () => moveIndicator(activeItem));
+      });
+      const lightbox = document.getElementById("lightbox");
+      const lightboxImg = document.getElementById("lightbox-img");
+      const closeBtn = document.getElementById("closeBtn");
+      const comicPages = document.querySelectorAll(".comic-page");
+      comicPages.forEach((page) => {
+        page.addEventListener("click", () => {
+          const img = page.querySelector("img");
+          if (img) {
+            lightboxImg.src = img.src;
+            lightbox.classList.add("active");
+            document.body.style.overflow = "hidden";
+          }
+        });
+      });
+      closeBtn.addEventListener("click", () => {
+        lightbox.classList.remove("active");
+        document.body.style.overflow = "auto";
+      });
+      lightbox.addEventListener("click", (e) => {
+        if (e.target === lightbox) {
+          lightbox.classList.remove("active");
+          document.body.style.overflow = "auto";
+        }
+      });
+    </script>
+  </body>
+</html>

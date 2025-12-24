@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>登录</title>
+    <meta charset="UTF-8" />
+    <style>
+      .login-title {
+        padding: 0 20px;
+        margin: auto;
+        place-self: center;
+        text-align: center;
+        font-size: 40px;
+        background: linear-gradient(
+          90deg,
+          #ff0000,
+          #ff9800,
+          #ffeb3b,
+          #4caf50,
+          #2196f3,
+          #9c27b0
+        );
+        background-size: 300%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: rainbow 4s linear infinite;
+        align-self: center;
+      }
+
+      @keyframes rainbow {
+        0% {
+          background-position: 0% 50%;
+        }
+        100% {
+          background-position: 100% 50%;
+        }
+      }
+
+      button {
+        border-radius: 8px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: transform 0.5s, background 0.5s;
+        background-color: rgba(200, 200, 200, 0.5);
+      }
+      button:hover {
+        transform: scale(1.05);
+        background-color: rgb(211, 211, 211, 0.7);
+      }
+      .clear:active,
+      .login-button:active {
+        transform: scale(0.95);
+        background-color: rgb(128, 128, 128, 0.8);
+      }
+
+      .input-group1,
+      .input-group2 {
+        display: flex;
+      }
+      input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid grey;
+        border-radius: 8px;
+        transition: 0.5s;
+        background: lightgrey;
+      }
+      input:focus {
+        border: 1px solid #000000;
+        box-shadow: 0 0 8px rgba(65, 148, 68, 0.2);
+        background: #fff;
+      }
+
+      .login-title {
+        grid-area: login-title;
+        text-align: center;
+      }
+      .input-group1 {
+        grid-area: input-group1;
+      }
+      .input-group2 {
+        grid-area: input-group2;
+      }
+      .login-button {
+        grid-area: login-button;
+      }
+      .clear {
+        grid-area: clear;
+      }
+
+      .background-container {
+        position: fixed;
+        top: -40px;
+        left: -40px;
+        width: calc(100% + 80px);
+        height: calc(100% + 80px);
+        background-image: url("backgrounds/background1.jpg");
+        background-size: cover;
+        background-position: center;
+        z-index: -1;
+        transition: transform 0.1s linear;
+      }
+
+      .login-card {
+        padding: 10px 20px;
+        margin: auto;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 350px;
+        height: 320px;
+        gap: 20px;
+        background-color: rgba(255, 255, 255, 0.6);
+        border-radius: 15px;
+        border: 1px solid rgba(0, 0, 0, 0.8);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr 1fr;
+        grid-template-areas:
+          "login-title login-title"
+          "input-group1 input-group1"
+          "input-group2 input-group2"
+          "login-button clear";
+      }
+    </style>
+    <link rel="icon" href="icon/mygo.png" />
+  </head>
+  <body>
+    <div class="background-container"></div>
+    <div class="login-card">
+      <h2 class="login-title">LOGIN</h2>
+      <div class="input-group1">
+        <input type="text" placeholder="账户" />
+      </div>
+      <div class="input-group2">
+        <input type="password" placeholder="密码" />
+      </div>
+      <button class="login-button">登 录</button>
+      <button class="clear">清 空</button>
+    </div>
+    <script>
+      const bg = document.querySelector(".background-container");
+      const card = document.querySelector(".login-card");
+      document.addEventListener("mousemove", (e) => {
+        const x = (e.clientX / window.innerWidth - 0.5) * 30;
+        const y = (e.clientY / window.innerHeight - 0.5) * 30;
+        bg.style.transform = `translate(${x}px, ${y}px)`;
+        const cardX = -x * 0.5;
+        const cardY = -y * 0.5;
+        card.style.transform = `translate(${cardX}px, ${cardY}px)`;
+      });
+      const loginBtn = document.querySelector(".login-button");
+      const clearBtn = document.querySelector(".clear");
+      const accountInput = document.querySelector(".input-group1 input");
+      const passwordInput = document.querySelector(".input-group2 input");
+      loginBtn.addEventListener("click", () => {
+        const account = accountInput.value;
+        const password = passwordInput.value;
+        if (account === "123456" && password === "123456") {
+          window.location.href = "picture.html";
+        } else {
+          alert("账号或密码错误，请重新输入");
+        }
+      });
+      clearBtn.addEventListener("click", () => {
+        accountInput.value = "";
+        passwordInput.value = "";
+      });
+    </script>
+  </body>
+</html>
